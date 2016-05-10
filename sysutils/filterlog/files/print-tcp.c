@@ -187,12 +187,13 @@ tcp_print(struct sbuf *sbuf, register const u_char *bp, register u_int length,
          */
         if (hlen > sizeof(*tp)) {
                 register const u_char *cp;
-                register u_int opt, datalen;
-                register u_int len;
 
                 hlen -= sizeof(*tp);
                 cp = (const u_char *)tp + sizeof(*tp);
-                while (hlen > 0) {
+
+		while (hlen > 0) {
+			register u_int opt, len;
+
                         if (ch != '\0')
                                 sbuf_printf(sbuf, "%c", ch);
                         opt = *cp++;
@@ -205,7 +206,7 @@ tcp_print(struct sbuf *sbuf, register const u_char *bp, register u_int length,
                                 --hlen;		/* account for length byte */
                         }
                         --hlen;			/* account for type byte */
-                        datalen = 0;
+			register u_int datalen = 0;
 
                         sbuf_printf(sbuf, "%s", code2str(tcp_option_values, "Unknown Option %u", opt));
 
